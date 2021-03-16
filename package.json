@@ -1,6 +1,6 @@
 {
-  "name": "@capacitor-community/safe-area",
-  "version": "0.0.1",
+  "name": "@whjvenyl/safe-area",
+  "version": "0.0.4",
   "description": "A plugin to expose the safe area insets from the native iOS/Android device to your web project.",
   "main": "dist/plugin.js",
   "module": "dist/esm/index.js",
@@ -56,10 +56,10 @@
   "swiftlint": "@ionic/swiftlint-config",
   "repository": {
     "type": "git",
-    "url": "https://github.com/capacitor-community/safe-area"
+    "url": "https://github.com/whjvenyl/safe-area"
   },
   "bugs": {
-    "url": "https://github.com/capacitor-community/safe-area/issues"
+    "url": "https://github.com/whjvenyl/safe-area/issues"
   },
   "dependencies": {}
 }

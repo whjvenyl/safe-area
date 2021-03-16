@@ -3,69 +3,68 @@ package com.capacitorjs.community.plugins.safearea;
 import com.getcapacitor.JSObject;
 
 public class SafeAreaInsets {
-	private int top, bottom, right, left;
 
-	public SafeAreaInsets() {
-		this.clear();
-	}
+    private int top, bottom, right, left;
 
-	public int top() { return this.top(null); }
+    public SafeAreaInsets() {
+        this.clear();
+    }
 
-	public int top(Integer value) {
-		if(value != null)
-			this.top = value;
+    public int top() {
+        return this.top(null);
+    }
 
-		return this.top;
-	}
+    public int top(Integer value) {
+        if (value != null) this.top = value;
 
-	public int bottom() {
-		return this.bottom(null);
-	}
+        return this.top;
+    }
 
-	public int bottom(Integer value) {
-		if(value != null)
-			this.bottom = value;
+    public int bottom() {
+        return this.bottom(null);
+    }
 
-		return this.bottom;
-	}
+    public int bottom(Integer value) {
+        if (value != null) this.bottom = value;
 
-	public int right() {
-		return this.right(null);
-	}
+        return this.bottom;
+    }
 
-	public int right(Integer value) {
-		if(value != null)
-			this.right = value;
+    public int right() {
+        return this.right(null);
+    }
 
-		return this.right;
-	}
+    public int right(Integer value) {
+        if (value != null) this.right = value;
 
-	public int left() {
-		return this.left(null);
-	}
+        return this.right;
+    }
 
-	public int left(Integer value) {
-		if(value != null)
-			this.left = value;
+    public int left() {
+        return this.left(null);
+    }
 
-		return this.left;
-	}
+    public int left(Integer value) {
+        if (value != null) this.left = value;
 
-	public void clear() {
-		this.top(0);
-		this.bottom(0);
-		this.right(0);
-		this.left(0);
-	}
+        return this.left;
+    }
 
-	public JSObject toJSON() {
-		JSObject json = new JSObject();
+    public void clear() {
+        this.top(0);
+        this.bottom(0);
+        this.right(0);
+        this.left(0);
+    }
 
-		json.put("top", this.top());
-		json.put("bottom", this.bottom());
-		json.put("right", this.right());
-		json.put("left", this.left());
+    public JSObject toJSON() {
+        JSObject json = new JSObject();
 
-		return json;
-	}
+        json.put("top", this.top());
+        json.put("bottom", this.bottom());
+        json.put("right", this.right());
+        json.put("left", this.left());
+
+        return json;
+    }
 }

@@ -5,4 +5,4 @@ export * from './web';
 
 const controller = new SafeAreaController();
 
-export { controller as SafeAreaController }
+export { controller as SafeAreaController };

@@ -25,7 +25,7 @@
 
 ## Installation
 
-Soon(TM)
+Soon(TM) - As long as the official repo isn't published this serves as a placeholder.
 
 ## Configuration
 

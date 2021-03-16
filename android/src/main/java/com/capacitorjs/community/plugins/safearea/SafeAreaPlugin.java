@@ -9,7 +9,6 @@ import android.os.Build;
 import android.util.Log;
 import android.view.DisplayCutout;
 import android.view.WindowInsets;
-
 import com.getcapacitor.JSObject;
 import com.getcapacitor.NativePlugin;
 import com.getcapacitor.Plugin;
@@ -18,123 +17,135 @@ import com.getcapacitor.PluginMethod;
 
 @NativePlugin
 public class SafeAreaPlugin extends Plugin implements SensorEventListener {
-	private static final String KEY_INSET = "insets";
-	private static final String EVENT_ON_INSETS_CHANGED = "safeAreaPluginsInsetChange";
-	private SafeAreaInsets safeAreaInsets = new SafeAreaInsets();
 
-	@PluginMethod
-	public void refresh(PluginCall call) {
-		this.doNotify();
-		call.success();
-	}
+    private static final String KEY_INSET = "insets";
+    private static final String EVENT_ON_INSETS_CHANGED = "safeAreaPluginsInsetChange";
+    private SafeAreaInsets safeAreaInsets = new SafeAreaInsets();
+    private final String TAG = SafeAreaPlugin.class.toString();
 
-	@PluginMethod
-	public void getSafeAreaInsets(PluginCall call) {
-		JSObject ret = new JSObject();
+    @PluginMethod
+    public void refresh(PluginCall call) {
+        this.doNotify();
+        call.success();
+    }
 
-		ret.put(SafeAreaPlugin.KEY_INSET, this.safeAreaInsets.toJSON());
+    @PluginMethod
+    public void getSafeAreaInsets(PluginCall call) {
+        JSObject ret = new JSObject();
 
-		call.success(ret);
-	}
+        ret.put(SafeAreaPlugin.KEY_INSET, this.safeAreaInsets.toJSON());
 
-	@Override
-	protected void handleOnResume() {
-		super.handleOnResume();
+        call.success(ret);
+    }
 
-		SensorManager sm = (SensorManager)this.getBridge().getActivity().getSystemService(Context.SENSOR_SERVICE);
-		sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_NORMAL);
-	}
+    @Override
+    protected void handleOnResume() {
+        super.handleOnResume();
 
-	@Override
-	protected void handleOnPause() {
-		super.handleOnPause();
+        SensorManager sm = (SensorManager) this.getBridge().getActivity().getSystemService(Context.SENSOR_SERVICE);
+        sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_NORMAL);
+    }
 
-		SensorManager sm = (SensorManager)this.getBridge().getActivity().getSystemService(Context.SENSOR_SERVICE);
-		sm.unregisterListener(this);
-	}
+    @Override
+    protected void handleOnPause() {
+        super.handleOnPause();
 
-	protected int getSafeArea(SafeAreaInsets cache) {
-		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-			Log.i(SafeAreaPlugin.class.toString(), String.format("Requires at least %d+", Build.VERSION_CODES.P));
+        SensorManager sm = (SensorManager) this.getBridge().getActivity().getSystemService(Context.SENSOR_SERVICE);
+        sm.unregisterListener(this);
+    }
 
-			cache.clear();
+    protected int getSafeArea(SafeAreaInsets cache) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            if (Log.isLoggable(TAG, Log.DEBUG)) {
+                Log.d(TAG, String.format("Requires at least %d+", Build.VERSION_CODES.P));
+            }
 
-			return -1;
-		}
+            cache.clear();
 
-		WindowInsets windowInsets = this.getBridge().getActivity().getWindow().getDecorView().getRootWindowInsets();
+            return -1;
+        }
 
-		if(windowInsets == null) {
-			Log.i(SafeAreaPlugin.class.toString(), "WindowInsets is not available.");
+        WindowInsets windowInsets = this.getBridge().getActivity().getWindow().getDecorView().getRootWindowInsets();
 
-			cache.clear();
+        if (windowInsets == null) {
+            if (Log.isLoggable(TAG, Log.DEBUG)) {
+                Log.d(TAG, "WindowInsets is not available.");
+            }
 
-			return -1;
-		}
+            cache.clear();
 
-		DisplayCutout displayCutout = windowInsets.getDisplayCutout();
+            return -1;
+        }
 
-		if(displayCutout == null) {
-			Log.i(SafeAreaPlugin.class.toString(), "DisplayCutout is not available.");
+        DisplayCutout displayCutout = windowInsets.getDisplayCutout();
 
-			cache.clear();
+        if (displayCutout == null) {
+            if (Log.isLoggable(TAG, Log.DEBUG)) {
+                Log.d(TAG, "DisplayCutout is not available.");
+            }
 
-			return -1;
-		}
+            cache.clear();
 
-		float density = this.getBridge().getActivity().getResources().getDisplayMetrics().density;
-		boolean hasChanged = false;
+            return -1;
+        }
 
-		int top = Math.round(displayCutout.getSafeInsetTop() / density);
-		int bottom = Math.round(displayCutout.getSafeInsetBottom() / density);
-		int left = Math.round(displayCutout.getSafeInsetLeft() / density);
-		int right = Math.round(displayCutout.getSafeInsetRight() / density);
+        float density = this.getBridge().getActivity().getResources().getDisplayMetrics().density;
+        boolean hasChanged = false;
 
-		if(cache.top() != top) {
-			cache.top(top);
-			hasChanged |= true;
-		}
+        int top = Math.round(displayCutout.getSafeInsetTop() / density);
+        int bottom = Math.round(displayCutout.getSafeInsetBottom() / density);
+        int left = Math.round(displayCutout.getSafeInsetLeft() / density);
+        int right = Math.round(displayCutout.getSafeInsetRight() / density);
 
-		if(cache.bottom() != bottom) {
-			cache.bottom(bottom);
-			hasChanged |= true;
-		}
+        if (cache.top() != top) {
+            cache.top(top);
+            hasChanged |= true;
+        }
 
-		if(cache.right() != right) {
-			cache.right(right);
-			hasChanged |= true;
-		}
+        if (cache.bottom() != bottom) {
+            cache.bottom(bottom);
+            hasChanged |= true;
+        }
 
-		if(cache.left() != left) {
-			cache.left(left);
-			hasChanged |= true;
-		}
+        if (cache.right() != right) {
+            cache.right(right);
+            hasChanged |= true;
+        }
 
-		return hasChanged ? 1 : 0;
-	}
+        if (cache.left() != left) {
+            cache.left(left);
+            hasChanged |= true;
+        }
 
-	@Override
-	public void onSensorChanged(SensorEvent event) {
-		int result = this.getSafeArea(this.safeAreaInsets);
+        return hasChanged ? 1 : 0;
+    }
 
-		switch (result) {
-			case SafeAreaInsetResult.ERROR:
-			case SafeAreaInsetResult.NO_CHANGE: return;
-		}
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        int result = this.getSafeArea(this.safeAreaInsets);
 
-		this.doNotify();
-	}
+        switch (result) {
+            case SafeAreaInsetResult.ERROR:
+            case SafeAreaInsetResult.NO_CHANGE:
+                return;
+        }
 
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) { /* Do Nothing... */ }
+        this.doNotify();
+    }
 
-	protected void doNotify() {
-		this.notifyListeners(SafeAreaPlugin.EVENT_ON_INSETS_CHANGED, this.safeAreaInsets.toJSON());
-	}
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        /* Do Nothing... */
+    }
 
-	public static class SafeAreaInsetResult {
-		public static final int ERROR = -1;
-		public static final int NO_CHANGE = 0;
-		public static final int CHANGE = 1;
-	}
+    protected void doNotify() {
+        this.notifyListeners(SafeAreaPlugin.EVENT_ON_INSETS_CHANGED, this.safeAreaInsets.toJSON());
+    }
+
+    public static class SafeAreaInsetResult {
+
+        public static final int ERROR = -1;
+        public static final int NO_CHANGE = 0;
+        public static final int CHANGE = 1;
+    }
 }
