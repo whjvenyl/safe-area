@@ -57,7 +57,7 @@ class SafeAreaController {
             );
             document.documentElement.style.setProperty(
               `--safe-area-inset-${inset}`,
-              `var(--${Capacitor.getPlatform()}-safe-area-inset-${inset}, env(safe-area-inset-${inset}))`,
+              `max(var(--${Capacitor.getPlatform()}-safe-area-inset-${inset}, '0px'), env(safe-area-inset-${inset}))`,
             );
           }
           break;
