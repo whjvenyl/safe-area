@@ -1,6 +1,6 @@
 {
   "name": "@whjvenyl/safe-area",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A plugin to expose the safe area insets from the native iOS/Android device to your web project.",
   "main": "dist/plugin.js",
   "module": "dist/esm/index.js",
